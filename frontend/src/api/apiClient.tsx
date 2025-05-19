@@ -1,8 +1,8 @@
 import type { Employee, LoginRequest, LoginResponse } from "../types";
-
 const API_BASE_URL = "http://localhost:8000/api";
 
 export async function loginUser(email: string): Promise<LoginResponse> {
+  // Send a login request to the API
   const response = await fetch(`${API_BASE_URL}/login`, {
     method: "POST",
     headers: {
@@ -19,6 +19,7 @@ export async function loginUser(email: string): Promise<LoginResponse> {
 }
 
 export async function getEmployeeProfile(
+  // Fetch a single employee's profile from the API
   employeeId: number
 ): Promise<Employee> {
   const response = await fetch(`${API_BASE_URL}/employee/${employeeId}`);
@@ -29,3 +30,18 @@ export async function getEmployeeProfile(
 
   return await response.json();
 }
+
+export const getAllEmployees = async (): Promise<Employee[]> => {
+  // Fetch all employees from the API
+  const response = await fetch(`${API_BASE_URL}/employees`);
+
+  if (!response.ok) {
+    const error = `Failed to fetch employees: ${response.statusText}`;
+    console.error(error);
+    throw new Error(error);
+  }
+
+  const data = await response.json();
+  console.log("Employees data:", data);
+  return data;
+};

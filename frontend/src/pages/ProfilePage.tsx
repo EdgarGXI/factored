@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   Container,
   Box,
@@ -15,6 +15,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 
+import { ArrowLeft } from "lucide-react";
 import Grid from "@mui/material/Grid";
 
 import {
@@ -35,7 +36,10 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
   const { logout } = useAuth();
+
+  const fromDashboard = location.state?.from === "dashboard";
 
   useEffect(() => {
     async function fetchEmployeeData() {
@@ -63,6 +67,10 @@ const ProfilePage = () => {
     navigate("/login");
   };
 
+  const handleBackToDashboard = () => {
+    navigate("/dashboard");
+  };
+
   if (loading) {
     return (
       <Container>
@@ -87,7 +95,7 @@ const ProfilePage = () => {
     return null;
   }
 
-  // Transform skills data for the radar chart
+  // Transform skills data for the spider chart (also called radar chart)
   const skillsData = Object.entries(employee.skills).map(([name, level]) => ({
     subject: name,
     A: level,
@@ -97,7 +105,17 @@ const ProfilePage = () => {
   return (
     <Container maxWidth="md">
       <Box sx={{ my: 4 }}>
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+          {/* Add back button if from dashboard */}
+          {fromDashboard && (
+            <Button
+              variant="outlined"
+              startIcon={<ArrowLeft size={18} />}
+              onClick={handleBackToDashboard}
+            >
+              Back to Dashboard
+            </Button>
+          )}
           <Button variant="outlined" onClick={handleLogout}>
             Logout
           </Button>

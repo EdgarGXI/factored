@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from ..database.models import Employee
-from ..database.schemas import EmployeeCreate, SkillsBase
+from ..database.models import Employee, EmployeeSkill
+from ..database.schemas import EmployeeCreate
 
 def get_employee_by_id(db: Session, employee_id: int):
     """Get employee by ID"""
@@ -11,24 +11,30 @@ def get_employee_by_email(db: Session, email: str):
     return db.query(Employee).filter(Employee.email == email).first()
 
 def create_employee(db: Session, employee: EmployeeCreate):
-    """Create a new employee"""
-    # Generate random avatar using DiceBear API
+    """Create a new employee with skills"""
+    # Generate random avatar
     avatar_url = f"https://api.dicebear.com/7.x/avataaars/svg?seed={employee.name}"
     
+    # Create employee without skills first
     db_employee = Employee(
         name=employee.name,
         position=employee.position,
         email=employee.email,
-        avatar_url=avatar_url,
-        python_skill=employee.skills.python,
-        sql_skill=employee.skills.sql,
-        java_skill=employee.skills.java,
-        spark_skill=employee.skills.spark,
-        react_skill=employee.skills.react,
-        docker_skill=employee.skills.docker,
-        aws_skill=employee.skills.aws
+        avatar_url=avatar_url
     )
     db.add(db_employee)
+    db.commit()
+    db.refresh(db_employee)
+    
+    # Add skills
+    for skill in employee.skills:
+        db_skill = EmployeeSkill(
+            employee_id=db_employee.id,
+            name=skill.name,
+            level=skill.level
+        )
+        db.add(db_skill)
+    
     db.commit()
     db.refresh(db_employee)
     return db_employee
@@ -39,16 +45,8 @@ def get_employee_with_skills(db: Session, employee_id: int):
     if not employee:
         return None
     
-    # Format skills for frontend
-    skills = SkillsBase(
-        python=employee.python_skill,
-        sql=employee.sql_skill,
-        java=employee.java_skill,
-        spark=employee.spark_skill,
-        react=employee.react_skill,
-        docker=employee.docker_skill,
-        aws=employee.aws_skill
-    )
+    # Convert skills to dictionary
+    skills_dict = {skill.name: skill.level for skill in employee.skills}
     
     return {
         "id": employee.id,
@@ -56,5 +54,11 @@ def get_employee_with_skills(db: Session, employee_id: int):
         "position": employee.position,
         "email": employee.email,
         "avatar_url": employee.avatar_url,
-        "skills": skills
+        "skills": skills_dict
     }
+
+
+def get_all_employees(db: Session):
+    """Get all employees with their skills"""
+    employees = db.query(Employee).all()
+    return [get_employee_with_skills(db, employee.id) for employee in employees]

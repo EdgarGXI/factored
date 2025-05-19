@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String, Float
-from .database import Base
+from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy.orm import relationship
+from ..database.database import Base
 
 class Employee(Base):
     __tablename__ = "employees"
@@ -10,12 +11,16 @@ class Employee(Base):
     email = Column(String, unique=True, index=True)
     avatar_url = Column(String, nullable=True)
     
-    # Skills as JSON-like string
-    # Each skill has a name and proficiency level
-    python_skill = Column(Float, default=0)
-    sql_skill = Column(Float, default=0)
-    java_skill = Column(Float, default=0)
-    spark_skill = Column(Float, default=0)
-    react_skill = Column(Float, default=0)
-    docker_skill = Column(Float, default=0)
-    aws_skill = Column(Float, default=0)
+    # Relationship to skills
+    skills = relationship("EmployeeSkill", back_populates="employee")
+
+class EmployeeSkill(Base):
+    __tablename__ = "employee_skills"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    employee_id = Column(Integer, ForeignKey("employees.id"))
+    name = Column(String)  # Skill name like "Python", "SQL", etc.
+    level = Column(Float)  # Skill level (0-100)
+    
+    # Relationship to employee
+    employee = relationship("Employee", back_populates="skills")

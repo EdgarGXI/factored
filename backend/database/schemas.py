@@ -1,27 +1,29 @@
-from pydantic import BaseModel, EmailStr
-from typing import Optional, Dict
+from pydantic import BaseModel
+from typing import Optional, Dict, List
 
-class SkillsBase(BaseModel):
-    python: float = 0
-    sql: float = 0
-    java: float = 0
-    spark: float = 0
-    react: float = 0
-    docker: float = 0
-    aws: float = 0
+class SkillBase(BaseModel):
+    name: str
+    level: float
+
+class SkillCreate(SkillBase):
+    pass
+
+class EmployeeCreate(BaseModel):
+    name: str
+    position: str
+    email: str
+    skills: List[SkillCreate]
 
 class EmployeeBase(BaseModel):
     name: str
     position: str
     email: str
-    avatar_url: Optional[str] = None
-
-class EmployeeCreate(EmployeeBase):
-    skills: SkillsBase
 
 class EmployeeResponse(EmployeeBase):
     id: int
-    skills: SkillsBase
+    avatar_url: Optional[str] = None
+    skills: Dict[str, float]  # Dictionary with skill names as keys and levels as values
+    
     
     class Config:
         from_attributes = True

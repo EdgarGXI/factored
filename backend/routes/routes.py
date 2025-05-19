@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
+from typing import List
 from sqlalchemy.orm import Session
 from ..database.database import get_db
 from ..database.schemas import LoginRequest, LoginResponse, EmployeeResponse
@@ -8,7 +9,7 @@ router = APIRouter()
 
 @router.post("/login", response_model=LoginResponse)
 async def login(login_data: LoginRequest, db: Session = Depends(get_db)):
-    """Simple login that checks if employee exists"""
+    """Login that checks if employee exists"""
     employee = crud.get_employee_by_email(db, login_data.email)
     if not employee:
         raise HTTPException(status_code=404, detail="Employee not found")
@@ -27,3 +28,9 @@ async def get_employee_profile(employee_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Employee not found")
     
     return EmployeeResponse(**employee_data)
+
+@router.get("/employees", response_model=List[EmployeeResponse])
+async def get_all_employees(db: Session = Depends(get_db)):
+    """Get all employee profiles"""
+    employees = crud.get_all_employees(db)
+    return employees

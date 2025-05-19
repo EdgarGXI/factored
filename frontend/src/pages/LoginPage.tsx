@@ -33,6 +33,17 @@ const LoginPage = () => {
 
     try {
       setLoading(true);
+
+      // Special case for admin
+      if (email === "admin@factored.com") {
+        // No need to validate with backend for admin
+        // Just store the email in sessionStorage for dashboard to check
+        sessionStorage.setItem("adminEmail", email);
+        navigate("/dashboard");
+        return;
+      }
+
+      // Normal employee login flow
       const { success, employeeId } = await login(email);
 
       if (success && employeeId) {
@@ -102,7 +113,8 @@ const LoginPage = () => {
             align="center"
             sx={{ mt: 2 }}
           >
-            Hint: Use john.doe@factored.com to log in
+            Hint: Use john.doe@factored.com to log in as a regular user or
+            admin@factored.com to access the dashboard
           </Typography>
         </Paper>
       </Box>

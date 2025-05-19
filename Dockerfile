@@ -1,7 +1,7 @@
 # Base image with Python for backend
 FROM python:3.12-slim
 
-# Install Node.js and other dependencies
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     nodejs \
     npm \

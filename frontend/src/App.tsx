@@ -8,6 +8,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
+import DashboardPage from "./pages/DashboardPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import { theme } from "./theme";
 import { AuthProvider } from "./context/AuthContext";
@@ -19,8 +20,9 @@ function App() {
       <AuthProvider>
         <Router>
           <Routes>
-            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/profile/:id" element={<ProfilePage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

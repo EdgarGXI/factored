@@ -21,7 +21,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const response = await loginUser(email);
 
-      // We're not setting the current user here since we'll fetch
+      // Not setting the current user here since we'll fetch
       // the full profile in the profile page
       return {
         success: true,
