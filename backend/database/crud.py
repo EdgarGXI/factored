@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models import Employee
-from schemas import EmployeeCreate, SkillsBase
+from ..database.models import Employee
+from ..database.schemas import EmployeeCreate, SkillsBase
 
 def get_employee_by_id(db: Session, employee_id: int):
     """Get employee by ID"""

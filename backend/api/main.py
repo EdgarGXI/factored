@@ -6,6 +6,8 @@ from ..routes.routes import router
 from ..database.schemas import EmployeeCreate, SkillsBase
 from ..database import crud
 
+
+
 # Create tables
 Base.metadata.create_all(bind=engine)
 
