@@ -1,5 +1,17 @@
 import type { Employee, LoginRequest, LoginResponse } from "../types";
-const API_BASE_URL = "http://localhost:8000/api";
+
+// Detectar si estamos en desarrollo o producción
+const getApiBaseUrl = () => {
+  // En desarrollo local, usar localhost:8000
+  if (import.meta.env.DEV) {
+    return "http://localhost:8000/api";
+  }
+
+  // En producción (Docker), usar la ruta relativa que será manejada por nginx
+  return "/api";
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 export async function loginUser(email: string): Promise<LoginResponse> {
   // Send a login request to the API
