@@ -1,13 +1,13 @@
 import type { Employee, LoginRequest, LoginResponse } from "../types";
 
-// Detectar si estamos en desarrollo o producción
+// This function determines the base URL for the API based on the environment.
 const getApiBaseUrl = () => {
-  // En desarrollo local, usar localhost:8000
+  // In development, use the local server
   if (import.meta.env.DEV) {
     return "http://localhost:8000/api";
   }
 
-  // En producción (Docker), usar la ruta relativa que será manejada por nginx
+  // In production, use the deployed server
   return "/api";
 };
 
