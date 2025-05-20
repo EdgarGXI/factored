@@ -57,4 +57,4 @@ A full-stack web application for managing employee profiles and skills tracking 
 
 ## Disclaimer
 
-- For the sake of the assesment, both backend and frontend are on the same repo in an attempt to provide just one link and make the the process to run more swiftly
+- For the sake of the assesment, both backend and frontend are on the same repo in an attempt to provide just one link and make the process to run more swiftly
